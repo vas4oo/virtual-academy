@@ -1,0 +1,67 @@
+{
+    "users": [
+        {
+            "id": "5ea3f7f5c645239c775a4ddb",
+            "isActive": false,
+            "firstName": "Cunningham",
+            "lastName": "Colon",
+            "email": "test@test.com",
+            "password": "123456",
+            "isAdmin": true
+        },
+        {
+            "id": "5ea3f7f54924c383f26a79c4",
+            "isActive": false,
+            "firstName": "Weeks",
+            "lastName": "Woodward",
+            "email": "weekswoodward@yogasm.com",
+            "password": "123456",
+            "isAdmin": false
+        },
+        {
+            "id": "5ea3f7f570f4c57bf0218e2d",
+            "isActive": true,
+            "firstName": "Phillips",
+            "lastName": "Castillo",
+            "email": "phillipscastillo@yogasm.com",
+            "password": "123456",
+            "isAdmin": false
+        },
+        {
+            "id": "5ea3f7f58d8a65b908c3f641",
+            "isActive": false,
+            "firstName": "Mitzi",
+            "lastName": "Deleon",
+            "email": "mitzideleon@yogasm.com",
+            "password": "123456",
+            "isAdmin": false
+        },
+        {
+            "id": "5ea3f7f5ac2776629673693d",
+            "isActive": true,
+            "firstName": "Wiggins",
+            "lastName": "Lester",
+            "email": "wigginslester@yogasm.com",
+            "password": "123456",
+            "isAdmin": false
+        },
+        {
+            "id": "5ea3f7f572a5b3768b0e3225",
+            "isActive": false,
+            "firstName": "Davidson",
+            "lastName": "Cain",
+            "email": "davidsoncain@yogasm.com",
+            "password": "123456",
+            "isAdmin": true
+        },
+        {
+            "id": "5ea3f7f5c3910a5b39905235",
+            "isActive": true,
+            "firstName": "Doyle",
+            "lastName": "Hendricks",
+            "email": "doylehendricks@yogasm.com",
+            "password": "123456",
+            "isAdmin": true
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+<div class="ui-float-label login-inputs">
+    <input id="float-input-email" type="text" size="30" pInputText [(ngModel)]="user.email">
+    <label for="float-input-email">Email</label>
+</div>
+
+<div class="ui-float-label login-inputs">
+    <input id="float-input-password" type="password" size="30" pInputText [(ngModel)]="user.password">
+    <label for="float-input-password">Password</label>
+</div>
+
+<p-button label="Login" (onClick)="handleLoginClick()" class="login-button"></p-button>
