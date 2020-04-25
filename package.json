@@ -49,10 +49,5 @@
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
     "typescript": "~3.8.3"
-  },
-  "styles": [
-    "node_modules/primeicons/primeicons.css",
-    "node_modules/primeng/resources/themes/nova-light/theme.css",
-    "node_modules/primeng/resources/primeng.min.css"
-  ]
+  }
 }
