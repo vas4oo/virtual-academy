@@ -36,11 +36,19 @@ function checkIsAdmin({ email, password }) {
     return database.users.find(user => user.email === email && user.password === password).isAdmin;
 }
 
+function getFirstName({ email, password }) {
+    return database.users.find(user => user.email === email && user.password === password).firstName;
+}
+
+function getLastName({ email, password }) {
+    return database.users.find(user => user.email === email && user.password === password).lastName;
+}
+
 // Register New User
 server.post('/auth/register', (req, res) => {
     console.log("register endpoint called; request body:");
     console.log(req.body);
-    const { email, password, firtsName, lastName } = req.body;
+    const { email, password, firstName, lastName } = req.body;
 
     if (database.users.find(user => user.email === email)) {
         const status = 401;
@@ -50,7 +58,7 @@ server.post('/auth/register', (req, res) => {
     }
 
     var last_item_id = database.users[database.users.length - 1].id;
-    database.users.push({ id: last_item_id + 1, email: email, password: password, firtsName: firtsName, lastName: lastName, isAdmin: false });
+    database.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false });
 
     fs.readFile("./db/db.json", (err, data) => {
         if (err) {
@@ -64,7 +72,7 @@ server.post('/auth/register', (req, res) => {
         var data = JSON.parse(data.toString());
 
         //Add new user
-        data.users.push({ id: last_item_id + 1, email: email, password: password, firtsName: firtsName, lastName: lastName, isAdmin: false }); //add some data
+        data.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false }); //add some data
         var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
@@ -76,7 +84,7 @@ server.post('/auth/register', (req, res) => {
     });
 
     // Create token for new user
-    const access_token = createToken({ email, password })
+    const access_token = createToken({ email, password, firstName })
     console.log("Access Token:" + access_token);
     res.status(200).json({ access_token })
 })
@@ -93,7 +101,8 @@ server.post('/auth/login', (req, res) => {
         return
     }
     const isAdmin = checkIsAdmin({ email, password });
-    const access_token = createToken({ email, password, isAdmin })
+    const firstName = getFirstName({ email, password });
+    const access_token = createToken({ email, password, isAdmin, firstName });
     console.log("Access Token:" + access_token);
     res.status(200).json({ access_token })
 })

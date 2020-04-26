@@ -1,8 +1,7 @@
 {
     "users": [
         {
-            "id": "5ea3f7f5c645239c775a4ddb",
-            "isActive": false,
+            "id": 1,
             "firstName": "Cunningham",
             "lastName": "Colon",
             "email": "test@test.com",
@@ -10,8 +9,7 @@
             "isAdmin": true
         },
         {
-            "id": "5ea3f7f54924c383f26a79c4",
-            "isActive": false,
+            "id": 2,
             "firstName": "Weeks",
             "lastName": "Woodward",
             "email": "weekswoodward@yogasm.com",
@@ -19,8 +17,7 @@
             "isAdmin": false
         },
         {
-            "id": "5ea3f7f570f4c57bf0218e2d",
-            "isActive": true,
+            "id": 3,
             "firstName": "Phillips",
             "lastName": "Castillo",
             "email": "phillipscastillo@yogasm.com",
@@ -28,8 +25,7 @@
             "isAdmin": false
         },
         {
-            "id": "5ea3f7f58d8a65b908c3f641",
-            "isActive": false,
+            "id": 4,
             "firstName": "Mitzi",
             "lastName": "Deleon",
             "email": "mitzideleon@yogasm.com",
@@ -37,8 +33,7 @@
             "isAdmin": false
         },
         {
-            "id": "5ea3f7f5ac2776629673693d",
-            "isActive": true,
+            "id": 5,
             "firstName": "Wiggins",
             "lastName": "Lester",
             "email": "wigginslester@yogasm.com",
@@ -46,8 +41,7 @@
             "isAdmin": false
         },
         {
-            "id": "5ea3f7f572a5b3768b0e3225",
-            "isActive": false,
+            "id": 6,
             "firstName": "Davidson",
             "lastName": "Cain",
             "email": "davidsoncain@yogasm.com",
@@ -55,13 +49,20 @@
             "isAdmin": true
         },
         {
-            "id": "5ea3f7f5c3910a5b39905235",
-            "isActive": true,
+            "id": 7,
             "firstName": "Doyle",
             "lastName": "Hendricks",
             "email": "doylehendricks@yogasm.com",
             "password": "123456",
             "isAdmin": true
+        },
+        {
+            "id": 8,
+            "email": "vas@sm.com",
+            "password": "123",
+            "firstName": "Vasil",
+            "lastName": "Smolyanski",
+            "isAdmin": false
         }
     ]
 }
