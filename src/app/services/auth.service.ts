@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import jwtDecode from "jwt-decode";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { apiUrl } from '../shared/constants';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +11,7 @@ export class AuthService {
         'Cache-Control': 'no-cache',
         'Pragma': 'no-cache'
     });
+    private loggedIn = new BehaviorSubject<boolean>(false);
 
     constructor(private http: HttpClient) { }
 
@@ -18,6 +20,7 @@ export class AuthService {
             .subscribe((res: any) => {
                 if (res.access_token) {
                     this.setToken(res);
+                    this.loggedIn.next(true);
                     return true;
                 }
                 return false;
@@ -36,6 +39,7 @@ export class AuthService {
     }
 
     logout() {
+        this.loggedIn.next(false);
         window.localStorage.removeItem("id_token");
     }
 
@@ -50,6 +54,10 @@ export class AuthService {
         } catch (err) {
             return false;
         }
+    }
+
+    isLoggedIn() {
+        return this.loggedIn.asObservable();
     }
 
     setToken(authResult) {
@@ -85,5 +93,15 @@ export class AuthService {
     getUserId() {
         let profile = this.getProfile();
         return profile && profile["id"] ? profile["id"] : undefined;
+    }
+
+    getEmailId() {
+        let profile = this.getProfile();
+        return profile && profile["email"] ? profile["email"] : undefined;
+    }
+
+    isAdmin() {
+        let profile = this.getProfile();
+        return profile && profile["isAdmin"] ? profile["isAdmin"] : false;
     }
 }

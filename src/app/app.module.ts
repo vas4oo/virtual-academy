@@ -18,6 +18,12 @@ import { AuthGuardService as AuthGuard } from './guards/auth.guard';
 import { PathNotFoundComponent } from './components/path-not-found/path-not-found.component';
 import { AlreadyLoggedGuard } from './guards/already-logged.guard';
 import { HomeComponent } from './components/home/home.component';
+import { UsersComponent } from './components/users/users.component';
+import { AdminGuardService } from './guards/admin.guard';
+import { LoaderComponent } from './shared/loader/loader.component';
+import { TableModule } from 'primeng/table';
+import { NavigationComponent } from './components/navigation/navigation.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -25,7 +31,10 @@ import { HomeComponent } from './components/home/home.component';
     LoginComponent,
     RegisterComponent,
     PathNotFoundComponent,
-    HomeComponent
+    HomeComponent,
+    UsersComponent,
+    LoaderComponent,
+    NavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -36,13 +45,16 @@ import { HomeComponent } from './components/home/home.component';
     ButtonModule,
     MessagesModule,
     MessageModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    TableModule,
+    FontAwesomeModule
   ],
   providers: [
     UserService,
     AuthService,
     AuthGuard,
-    AlreadyLoggedGuard
+    AlreadyLoggedGuard,
+    AdminGuardService
   ],
   bootstrap: [AppComponent]
 })

@@ -43,9 +43,14 @@ export class RegisterComponent implements OnInit {
 
     if (this.msgs.length === 0) {
       this.authService.createUser(this.user).subscribe(
-        res => {
-          this.msgs = [];
-          this.msgs.push({ severity: 'success', summary: 'Register completed you will be logged in' });
+        (res: any) => {
+          if (res.access_token) {
+            this.authService.setToken(res);
+            this.router.navigate(['home']);
+          }
+          else {
+            this.msgs.push({ severity: 'error', summary: 'Register failed' })
+          }
         },
         error => {
           if (error.status === 401) {

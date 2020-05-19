@@ -1,0 +1,28 @@
+.admin-badge {
+    border-radius: 2px;
+    padding: .25em .5em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+.status-true {
+    background-color: #C8E6C9;
+    color: #256029;
+}
+
+.status-false {
+    background-color: #FFCDD2;
+    color: #C63737;
+}
+
+.icon{
+    cursor: pointer;
+    font-size: 15px;
+    margin-right: 10px;
+}
+
+.delete{
+    color: #C63737; 
+}
+   

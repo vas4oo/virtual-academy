@@ -1,0 +1,50 @@
+.navigation{
+    padding: 5px;
+    background-color: black;
+    color: white;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navigation .title{
+    font-size: 18px;
+    padding: 10px;
+}
+
+.navigation .route{
+    cursor: pointer;
+    font-size: 16px;
+}
+
+a{
+    color: white;
+    padding: 0px 10px;
+}
+
+.navigation .route:hover{
+    color: #4591cc;
+}
+
+.active-path{
+    background-color: #4591cc;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.active-path:hover{
+    color: white !important;
+}
+
+.navigation .paths{
+    display: flex;
+    padding: 10px;
+}
+
+.route-logout{
+    border-left: 1px solid white;
+    cursor: pointer;
+    font-size: 16px;
+}
+

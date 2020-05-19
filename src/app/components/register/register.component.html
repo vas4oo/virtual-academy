@@ -1,27 +1,29 @@
-<div>
-    <p-messages [(value)]="msgs"></p-messages>
-    <h2>Register</h2>
-    <div class="ui-float-label login-inputs">
-        <input id="float-input-email" type="text" size="30" pInputText [(ngModel)]="user.firstName">
-        <label for="float-input-email">First name</label>
-    </div>
-    <div class="ui-float-label login-inputs">
-        <input id="float-input-email" type="text" size="30" pInputText [(ngModel)]="user.lastName">
-        <label for="float-input-email">Last name</label>
-    </div>
-    <div class="ui-float-label login-inputs">
-        <input id="float-input-email" type="text" size="30" pInputText [(ngModel)]="user.email">
-        <label for="float-input-email">Email</label>
-    </div>
+<div class="app-content flex-center">
+    <div class="login">
+        <p-messages [(value)]="msgs"></p-messages>
+        <h2>Register</h2>
+        <div class="ui-float-label login-inputs">
+            <input id="float-input-name" type="text" size="30" pInputText [(ngModel)]="user.firstName">
+            <label for="float-input-name">First name</label>
+        </div>
+        <div class="ui-float-label login-inputs">
+            <input id="float-input-last" type="text" size="30" pInputText [(ngModel)]="user.lastName">
+            <label for="float-input-last">Last name</label>
+        </div>
+        <div class="ui-float-label login-inputs">
+            <input id="float-input-email" type="text" size="30" pInputText [(ngModel)]="user.email">
+            <label for="float-input-email">Email</label>
+        </div>
 
-    <div class="ui-float-label login-inputs">
-        <input id="float-input-password" type="password" size="30" pInputText [(ngModel)]="user.password">
-        <label for="float-input-password">Password</label>
-    </div>
+        <div class="ui-float-label login-inputs">
+            <input id="float-input-password" type="password" size="30" pInputText [(ngModel)]="user.password">
+            <label for="float-input-password">Password</label>
+        </div>
 
-    <div class="ui-float-label login-inputs">
-        <input id="float-input-password" type="password" size="30" pInputText [(ngModel)]="confirmPass">
-        <label for="float-input-password">Confirm password</label>
+        <div class="ui-float-label login-inputs">
+            <input id="float-input-cpassword" type="password" size="30" pInputText [(ngModel)]="confirmPass">
+            <label for="float-input-cpassword">Confirm password</label>
+        </div>
+        <p-button label="Register" (onClick)="handleRegisterClick()" class="login-button"></p-button>
     </div>
-    <p-button label="Register" (onClick)="handleRegisterClick()" class="login-button"></p-button>
 </div>

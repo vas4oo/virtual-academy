@@ -1,0 +1,38 @@
+<div class="app-content">
+    <h1>Users</h1>
+    <p-messages [(value)]="msgs"></p-messages>
+    <div *ngIf="loading">
+        <app-loader></app-loader>
+    </div>
+    <p-table [value]="users" [rowHover]="true" [rows]="10" [paginator]="true">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Admin</th>
+                <th>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-user>
+            <tr style="text-align: center;">
+                <td>
+                    <div>{{user.email}}</div>
+                </td>
+                <td>{{user.firstName}}</td>
+                <td>{{user.lastName}}</td>
+                <td><span [class]="'admin-badge status-' + user.isAdmin">{{user.isAdmin ? "Yes" : "No"}}</span></td>
+                <td>
+                    <div *ngIf="user.email != loggedUserEmail">
+                        <a class="icon" (click)="onDeactivateClick(user)">
+                            <fa-icon [icon]="faTimes"></fa-icon>
+                        </a>
+                        <a class="icon delete" (click)="onDeleteClick(user)">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

@@ -1,0 +1,12 @@
+<div class="navigation">
+    <div class="title">VS Academy</div>
+    <div class="paths">
+        <div style="margin-right: 5px;" *ngFor="let route of routes">
+            <a class="route" routerLink="{{route.path}}" routerLinkActive="active-path">{{route.name}}</a>
+        </div>
+        <div *ngIf="isAuthenticated">
+            <a class="route-logout" (click)="logout()">Logout</a>
+        </div>
+    </div>
+
+</div>
