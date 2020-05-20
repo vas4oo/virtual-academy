@@ -5,4 +5,5 @@ export class UserModel {
     firstName: string;
     lastName: string;
     isAdmin: boolean;
+    isActive: boolean;
 }

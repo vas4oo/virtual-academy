@@ -21,6 +21,10 @@ export class UsersComponent implements OnInit {
   constructor(private userService: UserService, public authService: AuthService) { }
 
   ngOnInit(): void {
+    this.getUsers();
+  }
+
+  getUsers() {
     this.loading = true;
     this.userService.getAllUsers().subscribe(
       (res: any) => {
@@ -36,11 +40,34 @@ export class UsersComponent implements OnInit {
   }
 
   onDeactivateClick(user) {
-    console.log(user)
+    this.loading = true;
+    user.isActive = false;
+    this.userService.updateUser(user).subscribe(
+      res => {
+        this.loading = false;
+        this.getUsers();
+      },
+      error => {
+        this.loading = false;
+        this.msgs = [];
+        this.msgs.push({ severity: 'error', detail: 'Error updating user' })
+      }
+    )
   }
 
   onDeleteClick(user) {
-
+    this.loading = true;
+    this.userService.deleteUser(user.id).subscribe(
+      res => {
+        this.loading = false;
+        this.getUsers();
+      },
+      error => {
+        this.loading = false;
+        this.msgs = [];
+        this.msgs.push({ severity: 'error', detail: 'Error deleting user' })
+      }
+    )
   }
 
 }

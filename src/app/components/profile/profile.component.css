@@ -1,0 +1,15 @@
+.container{
+    background-color: #d8d8d8;
+    width: 290px;
+    padding: 20px;
+    border-radius: 18px;
+}
+
+.read-only-text{
+    padding: 2px;
+}
+
+.read-only-text label{
+    color: gray;
+    font-size: 12px;
+}

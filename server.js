@@ -32,16 +32,8 @@ function isAuthenticated({ email, password }) {
     return database.users.findIndex(user => user.email === email && user.password === password) !== -1
 }
 
-function checkIsAdmin({ email, password }) {
-    return database.users.find(user => user.email === email && user.password === password).isAdmin;
-}
-
-function getFirstName({ email, password }) {
-    return database.users.find(user => user.email === email && user.password === password).firstName;
-}
-
-function getLastName({ email, password }) {
-    return database.users.find(user => user.email === email && user.password === password).lastName;
+function getUser({ email, password }) {
+    return database.users.find(user => user.email === email && user.password === password);
 }
 
 // Register New User
@@ -58,7 +50,7 @@ server.post('/auth/register', (req, res) => {
     }
 
     var last_item_id = database.users[database.users.length - 1].id;
-    database.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false });
+    database.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false, isActive: true });
 
     fs.readFile("./db/db.json", (err, data) => {
         if (err) {
@@ -72,7 +64,7 @@ server.post('/auth/register', (req, res) => {
         var data = JSON.parse(data.toString());
 
         //Add new user
-        data.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false }); //add some data
+        data.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false, isActive: true }); //add some data
         var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
@@ -82,9 +74,11 @@ server.post('/auth/register', (req, res) => {
             }
         });
     });
+    let isActive = true;
+    let isAdmin = false;
 
     // Create token for new user
-    const access_token = createToken({ email, password, firstName })
+    const access_token = createToken({ id: last_item_id + 1, email, password, isAdmin, firstName, isActive })
     console.log("Access Token:" + access_token);
     res.status(200).json({ access_token })
 })
@@ -100,9 +94,8 @@ server.post('/auth/login', (req, res) => {
         res.status(status).json({ status, message })
         return
     }
-    const isAdmin = checkIsAdmin({ email, password });
-    const firstName = getFirstName({ email, password });
-    const access_token = createToken({ email, password, isAdmin, firstName });
+    const user = getUser({ email, password });
+    const access_token = createToken({ ...user });
     console.log("Access Token:" + access_token);
     res.status(200).json({ access_token })
 })
@@ -113,26 +106,27 @@ server.get('/users', (req, res) => {
     res.status(200).json({ users });
 });
 
-server.get('/movies/:id', (req, res) => {
+server.get('/users/:id', (req, res) => {
     let id = req.params.id;
-    console.log('Get movie by id ' + id);
-    const movie = database.movies.find(movie => movie.movieId === +id);
-    if (!movie || movie === undefined) {
+    console.log('Get user by id ' + id);
+    const user = database.users.find(userdb => userdb.id === +id);
+    if (!user || user === undefined) {
         const status = 404
-        const message = 'Movie not found'
+        const message = 'User not found'
         res.status(status).json({ status, message })
         return
     }
-    res.status(200).json({ movie });
+    user.password = '';
+    res.status(200).json({ user });
 });
 
-server.post('/movies', (req, res) => {
-    const movie = req.body;
-    console.log('create movie')
-    var last_item_id = database.movies.length;
-    movie.movieId = last_item_id + 1;
-    database.movies.push(movie);
-    fs.readFile("./db.json", (err, data) => {
+server.post('/users', (req, res) => {
+    const user = req.body;
+    console.log('create user')
+    var last_item_id = database.users.length;
+    user.id = last_item_id + 1;
+    database.users.push(user);
+    fs.readFile("./db/db.json", (err, data) => {
         if (err) {
             const status = 401
             const message = err
@@ -144,8 +138,8 @@ server.post('/movies', (req, res) => {
         var data = JSON.parse(data.toString());
 
         //Add new user
-        data.movies.push(movie); //add some data
-        var writeData = fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {  // WRITE
+        data.users.push(user); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
                 const message = err
@@ -157,20 +151,19 @@ server.post('/movies', (req, res) => {
     res.status(200).json(true)
 })
 
-server.put('/movies', (req, res) => {
-    const movie = req.body;
-    console.log('update movie')
-    const movieIndex = database.movies.findIndex(moviedb => moviedb.movieId === movie.movieId);
-    if (movieIndex === -1) {
+server.put('/users', (req, res) => {
+    const user = req.body;
+    console.log('update user')
+    const userIndex = database.users.findIndex(userdb => userdb.id === user.id);
+    if (userIndex === -1) {
         const status = 404
-        const message = 'Movie not found'
+        const message = 'User not found'
         res.status(status).json({ status, message })
         return
     }
 
-    database.movies.splice(movieIndex, 1, movie)
-
-    fs.readFile("./db.json", (err, data) => {
+    database.users.splice(userIndex, 1, user);
+    fs.readFile("./db/db.json", (err, data) => {
         if (err) {
             const status = 401
             const message = err
@@ -182,8 +175,8 @@ server.put('/movies', (req, res) => {
         var data = JSON.parse(data.toString());
 
         //Add new user
-        data.movies.splice(movieIndex, 1, movie); //add some data
-        var writeData = fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {  // WRITE
+        data.users.splice(userIndex, 1, user); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
                 const message = err
@@ -195,18 +188,18 @@ server.put('/movies', (req, res) => {
     res.status(200).json(true)
 })
 
-server.delete('/movies/:id', (req, res) => {
+server.delete('/users/:id', (req, res) => {
     let id = req.params.id;
     console.log("Delete by id ", id);
-    const movieIndex = database.movies.findIndex(movie => movie.movieId === +id);
-    if (movieIndex === -1) {
+    const userIndex = database.users.findIndex(user => user.id === +id);
+    if (userIndex === -1) {
         const status = 404
-        const message = 'Movie not found'
+        const message = 'User not found'
         res.status(status).json({ status, message })
         return
     }
     //remove from instance that is in this file
-    database.movies.splice(movieIndex, 1);
+    database.users.splice(userIndex, 1);
 
     //remove from file
     fs.readFile("./db/db.json", (err, data) => {
@@ -220,12 +213,12 @@ server.delete('/movies/:id', (req, res) => {
         // Get current users data
         var data = JSON.parse(data.toString());
 
-        data.movies.splice(movieIndex, 1);
-        for (let i = 0; i < data.movies.length; i++) {
-            data.movies[i].movieId = i + 1;
-            database.movies[1].movieId = i + 1;
+        data.users.splice(userIndex, 1);
+        for (let i = 0; i < data.users.length; i++) {
+            data.users[i].id = i + 1;
+            database.users[1].id = i + 1;
         }
-        var writeData = fs.writeFile("./db.json", JSON.stringify(data), (err, result) => {  // WRITE
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
                 const message = err

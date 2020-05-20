@@ -24,6 +24,8 @@ import { LoaderComponent } from './shared/loader/loader.component';
 import { TableModule } from 'primeng/table';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HomeComponent,
     UsersComponent,
     LoaderComponent,
-    NavigationComponent
+    NavigationComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +50,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MessageModule,
     BrowserAnimationsModule,
     TableModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    TooltipModule
   ],
   providers: [
     UserService,
