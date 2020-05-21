@@ -26,6 +26,9 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProfileComponent } from './components/profile/profile.component';
+import { CoursesComponent } from './components/courses/courses.component';
+import { CourseService } from './services/course.service';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { ProfileComponent } from './components/profile/profile.component';
     UsersComponent,
     LoaderComponent,
     NavigationComponent,
-    ProfileComponent
+    ProfileComponent,
+    CoursesComponent
   ],
   imports: [
     BrowserModule,
@@ -51,14 +55,16 @@ import { ProfileComponent } from './components/profile/profile.component';
     BrowserAnimationsModule,
     TableModule,
     FontAwesomeModule,
-    TooltipModule
+    TooltipModule,
+    RatingModule
   ],
   providers: [
     UserService,
     AuthService,
     AuthGuard,
     AlreadyLoggedGuard,
-    AdminGuardService
+    AdminGuardService,
+    CourseService
   ],
   bootstrap: [AppComponent]
 })

@@ -8,6 +8,7 @@ import { HomeComponent } from './components/home/home.component';
 import { UsersComponent } from './components/users/users.component';
 import { AdminGuardService } from './guards/admin.guard';
 import { ProfileComponent } from './components/profile/profile.component';
+import { CoursesComponent } from './components/courses/courses.component';
 
 const routes: Routes = [
   {
@@ -44,6 +45,11 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'courses',
+    component: CoursesComponent,
     canActivate: [AuthGuard]
   }
 ];

@@ -1,0 +1,35 @@
+<div class="app-content">
+    <h1>Courses</h1>
+    <p-messages [(value)]="msgs"></p-messages>
+    <div *ngIf="loading">
+        <app-loader></app-loader>
+    </div>
+    <div class="courses-list-container">
+        <div class="course-item" *ngFor="let course of courses">
+            <div class="first">
+                <div class="title-wrapper">
+                    <div class="title">{{course.title}}</div>
+                    <div [class]="course.liked ? 'icon liked' : 'icon not-liked'" (click)="onLikeClick(course)">
+                        <fa-icon [icon]="faHeart"></fa-icon>
+                    </div>
+                </div>
+                <div class="date-wrapper">
+                    <div class="date">{{course.date}}</div>
+                    <div class="rating">
+                        <span>{{course.rating ? course.rating.toFixed(1) + "/5" : "Not rated"}}</span>
+                        <div class="star-icon">
+                            <fa-icon [icon]="faStar"></fa-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="rating-stars">
+                    <p-rating [(ngModel)]="course.userRating" [cancel]="false" (onRate)="onRateClick($event, course)">
+                    </p-rating>
+                </div>
+            </div>
+            <div class="second">
+                <div class="description">{{course.description}}</div>
+            </div>
+        </div>
+    </div>
+</div>

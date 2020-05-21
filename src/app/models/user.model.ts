@@ -6,4 +6,5 @@ export class UserModel {
     lastName: string;
     isAdmin: boolean;
     isActive: boolean;
+    liked: boolean;
 }

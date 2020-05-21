@@ -36,6 +36,32 @@ function getUser({ email, password }) {
     return database.users.find(user => user.email === email && user.password === password);
 }
 
+function updateUser(userIndex, user) {
+    database.users.splice(userIndex, 1, user);
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+            const status = 401
+            const message = err
+            res.status(status).json({ status, message })
+            return
+        };
+
+        // Get current users data
+        var data = JSON.parse(data.toString());
+
+        //Add new user
+        data.users.splice(userIndex, 1, user); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
+            if (err) {
+                const status = 401
+                const message = err
+                res.status(status).json({ status, message })
+                return
+            }
+        });
+    });
+}
+
 // Register New User
 server.post('/auth/register', (req, res) => {
     console.log("register endpoint called; request body:");
@@ -162,29 +188,7 @@ server.put('/users', (req, res) => {
         return
     }
 
-    database.users.splice(userIndex, 1, user);
-    fs.readFile("./db/db.json", (err, data) => {
-        if (err) {
-            const status = 401
-            const message = err
-            res.status(status).json({ status, message })
-            return
-        };
-
-        // Get current users data
-        var data = JSON.parse(data.toString());
-
-        //Add new user
-        data.users.splice(userIndex, 1, user); //add some data
-        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
-            if (err) {
-                const status = 401
-                const message = err
-                res.status(status).json({ status, message })
-                return
-            }
-        });
-    });
+    updateUser(userIndex, user)
     res.status(200).json(true)
 })
 
@@ -217,6 +221,247 @@ server.delete('/users/:id', (req, res) => {
         for (let i = 0; i < data.users.length; i++) {
             data.users[i].id = i + 1;
             database.users[1].id = i + 1;
+        }
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
+            if (err) {
+                const status = 401
+                const message = err
+                res.status(status).json({ status, message })
+                return
+            }
+        });
+    });
+
+    res.status(200).json(true)
+})
+
+server.get('/courses/:id', (req, res) => {
+    let id = req.params.id;
+    console.log('Get courses');
+    const courses = database.courses;
+    for (let course of courses) {
+        if (database.coursesRating) {
+            let ratings = database.coursesRating.filter(r => r.courseId === course.id);
+            course.rating = ratings.reduce((acc, curr, indx) => (acc + curr.rating), 0) / ratings.length;
+            let userRating = database.coursesRating.find(r => r.courseId === course.id && r.userId === parseInt(id));
+            if (userRating) {
+                course.userRating = userRating.rating;
+            }
+        }
+
+        if (database.users) {
+            let user = database.users.find(r => r.id === parseInt(id));
+            if (user && user.favouriteCourses && user.favouriteCourses.length > 0) {
+                let indxOf = user.favouriteCourses.indexOf(course.id);
+                if (indxOf > -1) {
+                    course.liked = true;
+                }
+            }
+        }
+    }
+    res.status(200).json({ courses });
+});
+
+server.get('/course/:id', (req, res) => {
+    let id = req.params.id;
+    console.log('Get course by id ' + id);
+    const course = database.courses.find(courseDb => courseDb.id === +id);
+    if (!course || course === undefined) {
+        const status = 404
+        const message = 'Course not found'
+        res.status(status).json({ status, message })
+        return
+    }
+    res.status(200).json({ course });
+});
+
+server.get('/likeCourses/:userId/:courseId/:like/', (req, res) => {
+    let userId = req.params.userId;
+    let courseId = req.params.courseId;
+    let liked = req.params.like;
+    console.log('Set favourite course ' + courseId, userId, liked);
+    const course = database.courses.find(courseDb => courseDb.id === +courseId);
+    if (!course || course === undefined) {
+        const status = 404
+        const message = 'Course not found'
+        res.status(status).json({ status, message })
+        return
+    }
+
+    let user = database.users.find(userdb => userdb.id === +userId);
+    if (liked === "true") {
+        user.favouriteCourses.push(+courseId);
+    }
+    else {
+        let indexOfCourse = user.favouriteCourses.indexOf(+courseId);
+        if (indexOfCourse > -1) {
+            user.favouriteCourses.splice(indexOfCourse, 1);
+        }
+    }
+    if (user === -1) {
+        const status = 404
+        const message = 'User not found'
+        res.status(status).json({ status, message })
+        return
+    }
+
+    updateUser(database.users.indexOf(user), user)
+
+    res.status(200).json(true);
+});
+
+
+server.get('/courseRating/:userId/:courseId/:rating/', (req, res) => {
+    let userId = req.params.userId;
+    let courseId = req.params.courseId;
+    let rating = req.params.rating;
+    console.log('Set course rating ' + courseId, userId, rating);
+    const course = database.courses.find(courseDb => courseDb.id === +courseId);
+    if (!course || course === undefined) {
+        const status = 404
+        const message = 'Course not found'
+        res.status(status).json({ status, message })
+        return
+    }
+
+    let user = database.users.find(userdb => userdb.id === +userId);
+    if (user === -1) {
+        const status = 404
+        const message = 'User not found'
+        res.status(status).json({ status, message })
+        return
+    }
+
+    let dbRating = database.coursesRating.findIndex(r => r.courseId === +courseId && r.userId === +userId);
+    if (dbRating === -1) {
+        dbRating = database.coursesRating.length;
+    }
+
+    database.coursesRating.splice(dbRating, 1, { courseId: +courseId, userId: +userId, rating: +rating });
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+            const status = 401
+            const message = err
+            res.status(status).json({ status, message })
+            return
+        };
+
+        // Get current course data
+        var data = JSON.parse(data.toString());
+
+        //Add new course
+        data.coursesRating.splice(dbRating, 1, { courseId: +courseId, userId: +userId, rating: +rating }); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
+            if (err) {
+                const status = 401
+                const message = err
+                res.status(status).json({ status, message })
+                return
+            }
+        });
+    });
+
+
+    res.status(200).json(true);
+});
+
+server.post('/courses', (req, res) => {
+    const course = req.body;
+    console.log('create course')
+    var last_item_id = database.courses.length;
+    course.id = last_item_id + 1;
+    database.courses.push(course);
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+            const status = 401
+            const message = err
+            res.status(status).json({ status, message })
+            return
+        };
+
+        // Get current courses data
+        var data = JSON.parse(data.toString());
+
+        //Add new course
+        data.courses.push(course); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
+            if (err) {
+                const status = 401
+                const message = err
+                res.status(status).json({ status, message })
+                return
+            }
+        });
+    });
+    res.status(200).json(true)
+})
+
+server.put('/courses', (req, res) => {
+    const course = req.body;
+    console.log('update course')
+    const courseIndex = database.courses.findIndex(coursedb => coursedb.id === course.id);
+    if (courseIndex === -1) {
+        const status = 404
+        const message = 'Course not found'
+        res.status(status).json({ status, message })
+        return
+    }
+
+    database.courses.splice(courseIndex, 1, course);
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+            const status = 401
+            const message = err
+            res.status(status).json({ status, message })
+            return
+        };
+
+        // Get current course data
+        var data = JSON.parse(data.toString());
+
+        //Add new course
+        data.courses.splice(courseIndex, 1, course); //add some data
+        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
+            if (err) {
+                const status = 401
+                const message = err
+                res.status(status).json({ status, message })
+                return
+            }
+        });
+    });
+    res.status(200).json(true)
+})
+
+server.delete('/courses/:id', (req, res) => {
+    let id = req.params.id;
+    console.log("Delete by id ", id);
+    const courseIndex = database.courses.findIndex(course => course.id === +id);
+    if (courseIndex === -1) {
+        const status = 404
+        const message = 'course not found'
+        res.status(status).json({ status, message })
+        return
+    }
+    //remove from instance that is in this file
+    database.courses.splice(courseIndex, 1);
+
+    //remove from file
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+            const status = 401
+            const message = err
+            res.status(status).json({ status, message })
+            return
+        };
+
+        // Get current courses data
+        var data = JSON.parse(data.toString());
+
+        data.courses.splice(courseIndex, 1);
+        for (let i = 0; i < data.courses.length; i++) {
+            data.courses[i].id = i + 1;
+            database.courses[1].id = i + 1;
         }
         var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {

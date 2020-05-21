@@ -3,7 +3,6 @@ import { UserModel } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/users.service';
 import { Message } from 'primeng/api';
 import { AuthService } from 'src/app/services/auth.service';
-import { error } from 'protractor';
 
 @Component({
   selector: 'app-profile',
@@ -35,20 +34,36 @@ export class ProfileComponent implements OnInit {
   }
 
   handleSaveClick() {
-    if (this.user.firstName.trim() == '') {
+    if (this.user.firstName.trim() === '') {
       this.msgs.push({ severity: 'error', detail: 'Please enter first name' });
     }
 
-    if (this.user.lastName.trim() == '') {
+    if (this.user.lastName.trim() === '') {
       this.msgs.push({ severity: 'error', detail: 'Please enter last name' });
     }
 
-    if (this.user.password.trim() != '' && this.confirmPass.trim() == '') {
+    if (this.user.password.trim() !== '' && this.confirmPass.trim() === '') {
       this.msgs.push({ severity: 'error', detail: 'If you want to change your password please enter Confirm password too' });
     }
 
-    if (this.msgs.length == 0) {
+    if (this.msgs.length > 0) {
       return;
     }
+
+    this.loading = true;
+    this.userService.updateUser(this.user).subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res) {
+          this.user.password = '';
+          this.confirmPass = '';
+        }
+      },
+      (error: any) => {
+        this.loading = false;
+        this.msgs = [];
+        this.msgs.push({ severity: 'error', detail: 'Error updating user' });
+      }
+    );
   }
 }

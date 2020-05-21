@@ -1,0 +1,84 @@
+.courses-list-container{
+    display: flex;
+}
+
+.course-item{
+    width: 500px;
+    height: 150px;
+    margin:10px;
+    display: flex;
+}
+
+.first{
+    width: 200px;
+    background-color: #4591cc;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+
+.title-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.title-wrapper .icon{
+    padding: 10px;
+    font-size: 20px;
+}
+
+.title-wrapper .icon:hover{
+    cursor: pointer;
+    color: #cb4e4e;
+}
+
+.not-liked{
+    color: white;
+}
+
+.liked{
+    color: #cb4e4e;
+}
+
+.title{
+    font-size: 20px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 10px 0px 10px;
+}
+
+.rating{
+    padding: 0px 10px;
+    display: flex;
+}
+
+.star-icon{
+    margin-left: 10px;
+    color: yellow;
+}
+
+.first .date{
+    font-size: 14px;
+    color: white;
+    padding: 0px 10px 10px 10px;
+}
+
+.second{
+    width: 300px;
+    background-color: white;
+    border-top: 1px solid #4591cc;
+    border-bottom: 1px solid #4591cc;
+    border-right: 1px solid #4591cc;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 10px;
+    color: #4591cc;
+}
+
+.date-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.rating-stars{
+    padding: 0px 10px;
+}

@@ -41,3 +41,12 @@ h1{
     color: white;
     margin-top: 0px
 }
+
+.ui-rating a {
+    color: yellow !important;
+    cursor: pointer;
+}
+
+.ui-rating a span{
+    font-size: 25px !important;
+}
