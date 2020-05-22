@@ -1,5 +1,10 @@
 <div class="app-content">
-    <h1>Courses</h1>
+    <div class="container">
+        <h1>Courses</h1>
+        <div class="p-10" *ngIf="isAdministrator">
+            <p-button label="Add" (onClick)="handleAddClick()" class="login-button"></p-button>
+        </div>
+    </div>
     <p-messages [(value)]="msgs"></p-messages>
     <div *ngIf="loading">
         <app-loader></app-loader>
@@ -26,6 +31,14 @@
                     <p-rating [(ngModel)]="course.userRating" [cancel]="false" (onRate)="onRateClick($event, course)">
                     </p-rating>
                 </div>
+                <div *ngIf="isAdministrator" class="icon-container">
+                    <div class="edit" (click)="onEditClick(course)">
+                        <fa-icon [icon]="faPencilAlt"></fa-icon>
+                    </div>
+                    <div class="delete" (click)="onDeleteClick(course)">
+                        <fa-icon [icon]="faTrash"></fa-icon>
+                    </div>
+                </div>
             </div>
             <div class="second">
                 <div class="description">{{course.description}}</div>
@@ -33,3 +46,39 @@
         </div>
     </div>
 </div>
+
+<p-dialog [(visible)]="isVisibleDialog">
+    <p-header>
+        {{title}}
+    </p-header>
+    <div class="dialog-container">
+        <div style="padding-bottom:10px;">
+            <label>Title</label>
+            <div style="width: 100%;">
+                <input type="text" size="30" pInputText [(ngModel)]="newCourse.title">
+            </div>
+        </div>
+        <div style="padding-bottom:10px;">
+            <label>Date</label>
+            <div style="width: 100%;">
+                <p-calendar [(ngModel)]="courseDate" [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}"
+                    dateFormat="dd.mm.yy">
+                </p-calendar>
+            </div>
+        </div>
+        <div>
+            <label>Description</label>
+            <div>
+                <textarea rows="5" cols="30" pInputTextarea [(ngModel)]="newCourse.description"></textarea>
+            </div>
+        </div>
+    </div>
+    <p-footer class="buttons-container">
+        <div>
+            <p-button label="Save" (onClick)="handleSaveClick()" class="login-button"></p-button>
+        </div>
+        <div>
+            <p-button label="Close" (onClick)="handleCloseClick()" class="login-button"></p-button>
+        </div>
+    </p-footer>
+</p-dialog>

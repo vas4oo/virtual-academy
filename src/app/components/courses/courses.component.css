@@ -1,84 +1,44 @@
-.courses-list-container{
-    display: flex;
+.p-10{
+    padding: 0px 20px;
 }
 
-.course-item{
-    width: 500px;
-    height: 150px;
-    margin:10px;
+.container{
     display: flex;
+    align-items: baseline;
 }
 
-.first{
-    width: 200px;
-    background-color: #4591cc;
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-}
-
-.title-wrapper{
+.icon-container{
     display: flex;
+    font-size: 20px;
+    padding: 10px;
     justify-content: space-between;
 }
 
-.title-wrapper .icon{
-    padding: 10px;
-    font-size: 20px;
-}
-
-.title-wrapper .icon:hover{
+.delete{
+    color: red;
     cursor: pointer;
-    color: #cb4e4e;
 }
 
-.not-liked{
-    color: white;
+.edit{
+    color: #4444a7;
+    cursor: pointer;
 }
 
-.liked{
-    color: #cb4e4e;
-}
-
-.title{
-    font-size: 20px;
-    color: white;
-    font-weight: 600;
-    padding: 10px 10px 0px 10px;
-}
-
-.rating{
-    padding: 0px 10px;
+.buttons-container{
     display: flex;
 }
 
-.star-icon{
-    margin-left: 10px;
-    color: yellow;
-}
-
-.first .date{
-    font-size: 14px;
-    color: white;
-    padding: 0px 10px 10px 10px;
-}
-
-.second{
-    width: 300px;
-    background-color: white;
-    border-top: 1px solid #4591cc;
-    border-bottom: 1px solid #4591cc;
-    border-right: 1px solid #4591cc;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
-    padding: 10px;
-    color: #4591cc;
-}
-
-.date-wrapper{
+.dialog-container{
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    min-height: 500px;
+    min-width: 400px;
 }
 
-.rating-stars{
-    padding: 0px 10px;
+.ui-inputtext{
+    width: 400px !important;
+}
+
+.ui-widget{
+    width: 400px !important;
 }

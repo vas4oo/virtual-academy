@@ -29,6 +29,9 @@ import { ProfileComponent } from './components/profile/profile.component';
 import { CoursesComponent } from './components/courses/courses.component';
 import { CourseService } from './services/course.service';
 import { RatingModule } from 'primeng/rating';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 
 @NgModule({
   declarations: [
@@ -56,7 +59,10 @@ import { RatingModule } from 'primeng/rating';
     TableModule,
     FontAwesomeModule,
     TooltipModule,
-    RatingModule
+    RatingModule,
+    DialogModule,
+    CalendarModule,
+    InputTextareaModule
   ],
   providers: [
     UserService,

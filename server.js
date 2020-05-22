@@ -76,7 +76,17 @@ server.post('/auth/register', (req, res) => {
     }
 
     var last_item_id = database.users[database.users.length - 1].id;
-    database.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false, isActive: true });
+    const newUser = {
+        id: last_item_id + 1,
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        isAdmin: false,
+        isActive: true,
+        favouriteCourses: []
+    }
+    database.users.push(newUser);
 
     fs.readFile("./db/db.json", (err, data) => {
         if (err) {
@@ -90,7 +100,7 @@ server.post('/auth/register', (req, res) => {
         var data = JSON.parse(data.toString());
 
         //Add new user
-        data.users.push({ id: last_item_id + 1, email: email, password: password, firstName: firstName, lastName: lastName, isAdmin: false, isActive: true }); //add some data
+        data.users.push(newUser); //add some data
         var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
             if (err) {
                 const status = 401
@@ -145,37 +155,6 @@ server.get('/users/:id', (req, res) => {
     user.password = '';
     res.status(200).json({ user });
 });
-
-server.post('/users', (req, res) => {
-    const user = req.body;
-    console.log('create user')
-    var last_item_id = database.users.length;
-    user.id = last_item_id + 1;
-    database.users.push(user);
-    fs.readFile("./db/db.json", (err, data) => {
-        if (err) {
-            const status = 401
-            const message = err
-            res.status(status).json({ status, message })
-            return
-        };
-
-        // Get current users data
-        var data = JSON.parse(data.toString());
-
-        //Add new user
-        data.users.push(user); //add some data
-        var writeData = fs.writeFile("./db/db.json", JSON.stringify(data), (err, result) => {  // WRITE
-            if (err) {
-                const status = 401
-                const message = err
-                res.status(status).json({ status, message })
-                return
-            }
-        });
-    });
-    res.status(200).json(true)
-})
 
 server.put('/users', (req, res) => {
     const user = req.body;
@@ -260,6 +239,31 @@ server.get('/courses/:id', (req, res) => {
         }
     }
     res.status(200).json({ courses });
+});
+
+server.get('/favouriteCourses/:id', (req, res) => {
+    let id = req.params.id;
+    console.log('Get fav courses');
+    let user = database.users.find(r => r.id === +id);
+    if (!user) {
+        const status = 404
+        const message = 'User not found'
+        res.status(status).json({ status, message })
+        return;
+    }
+
+    let favCourses = [];
+    for (let courseId of user.favouriteCourses) {
+        if (database.coursesRating) {
+            let course = database.courses.find(r => r.id === courseId);
+            if (course) {
+                let ratings = database.coursesRating.filter(r => r.courseId === courseId);
+                course.rating = ratings.reduce((acc, curr, indx) => (acc + curr.rating), 0) / ratings.length;
+                favCourses.push(course);
+            }
+        }
+    }
+    res.status(200).json({ favCourses });
 });
 
 server.get('/course/:id', (req, res) => {
