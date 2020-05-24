@@ -4,6 +4,7 @@ import { CourseService } from 'src/app/services/course.service';
 import { Message } from 'primeng/api';
 import { faHeart, faStar, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
+import { error } from 'protractor';
 
 @Component({
   selector: 'app-courses',
@@ -81,14 +82,26 @@ export class CoursesComponent implements OnInit {
 
   handleAddClick() {
     this.isVisibleDialog = true;
+    this.newCourse = new CourseModel();
   }
 
   onEditClick(course: CourseModel) {
-
+    this.newCourse = { ...course };
+    this.isVisibleDialog = true;
   }
 
   onDeleteClick(course: CourseModel) {
-
+    this.loading = true;
+    this.courseService.deleteCourse(course.id).subscribe(
+      (res: any) => {
+        this.loading = false;
+        this.getAllCourses();
+      },
+      error => {
+        this.loading = false;
+        this.msgs = [];
+        this.msgs.push({ severity: 'error', detail: 'Error deleting course' })
+      });
   }
 
   handleCloseClick() {
@@ -99,7 +112,35 @@ export class CoursesComponent implements OnInit {
   handleSaveClick() {
     let nDate = this.getDate(this.courseDate);
     this.newCourse.date = nDate;
-
+    this.loading = true;
+    if (this.newCourse.id > 0) {
+      this.courseService.updateCourse(this.newCourse).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.isVisibleDialog = false;
+          this.getAllCourses();
+        },
+        error => {
+          this.loading = false;
+          this.msgs = [];
+          this.msgs.push({ severity: 'error', detail: 'Error updating course' });
+        }
+      );
+    }
+    else {
+      this.courseService.createCourse(this.newCourse).subscribe(
+        (res: any) => {
+          this.loading = false;
+          this.isVisibleDialog = false;
+          this.getAllCourses();
+        },
+        error => {
+          this.loading = false;
+          this.msgs = [];
+          this.msgs.push({ severity: 'error', detail: 'Error creating course' });
+        }
+      );
+    }
   }
 
   getDate(date: Date): string {

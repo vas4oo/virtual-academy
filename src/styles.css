@@ -53,6 +53,7 @@ h1{
 
 .courses-list-container{
     display: flex;
+    flex-flow: wrap;
 }
 
 .course-item{
